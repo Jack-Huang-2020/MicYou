@@ -671,7 +671,7 @@ private fun MuteButton(
                 null, tint = contentColor, modifier = Modifier.size(16.dp)
             )
             Text(
-                if (isMuted) strings.muteLabel else strings.unmuteLabel,
+                if (isMuted) strings.unmuteLabel else strings.muteLabel,
                 style = MaterialTheme.typography.labelSmall, color = contentColor
             )
         }
