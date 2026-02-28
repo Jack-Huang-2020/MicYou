@@ -58,10 +58,10 @@ Based on the [AndroidMic](https://github.com/teamclouday/AndroidMic) project.
 ### Android App
 |                        Main Screen                        |                           Settings                            |
 |:---------------------------------------------------------:|:-------------------------------------------------------------:|
-| <img src="img/android_screenshot_main.jpg" width="300" /> | <img src="img/android_screenshot_settings.jpg" width="300" /> |
+| <img src="img/android_screenshot_main.png" width="300" /> | <img src="img/android_screenshot_settings.png" width="300" /> |
 
 ### Desktop App
-<img src="img/pc_screenshot.png" width="600" />
+<img src="img/desktop_screenshot.png" width="600" />
 
 ## Getting Started
 
