@@ -8,6 +8,36 @@
   <b>简体中文</b> | <a href="./README_TW.md">繁體中文</a> | <a href="./README.md">English</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/LanRhyme/MicYou/blob/master/LICENSE">
+    <img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-green"></a>
+  <a href="https://github.com/LanRhyme/MicYou/stargazers">
+    <img alt="Github Stars" src="https://img.shields.io/github/stars/LanRhyme/MicYou?style=flat&logo=github&logoColor=white"><a>
+  <a href="https://github.com/LanRhyme/MicYou/releases/latest">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/LanRhyme/MicYou?logo=github"></a>
+  <a href="https://qm.qq.com/q/V16hPpWPKO">
+    <img alt="QQ" src="https://img.shields.io/badge/QQ%E7%BE%A4-995452107-12B7F5?style=flat&logo=qq&logoColor=white"><a>
+  <a href="https://aur.archlinux.org/packages/micyou-bin">
+    <img alt="AUR Version" src="https://img.shields.io/aur/version/micyou-bin?logo=archlinux&label=micyou-bin"></a>
+  <a href="https://crowdin.com/project/micyou" target="_blank" rel="noopener noreferrer">
+    <img alt="Crowdin" src="https://badges.crowdin.net/micyou/localized.svg"></a>
+</p>
+
+<h6 align="center">基于</h6>
+<p align="center">
+  <img alt="Kotlin" src="https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white" />
+  <img alt="Jetpack Compose" src="https://img.shields.io/badge/Jetpack_Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white">
+</p>
+
+<h6 align="center">受支持的平台</h6>
+
+<p align="center">
+  <img alt="Android" src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" />
+  <img alt="Windows" src="https://custom-icon-badges.demolab.com/badge/Windows-0078D6?&style=for-the-badge&logo=windows11&logoColor=white" />
+  <img alt="Linux" src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black" />
+  <img alt="macOS" src="https://img.shields.io/badge/mac%20os-000000?style=for-the-badge&logo=apple&logoColor=F0F0F0" />
+</p>
+
 MicYou 是一款强大的工具，可以将您的 Android 设备变成 PC 的高质量无线麦克风，于 Kotlin Multiplatform 和 Jetpack Compose/Material 3 构建
 
 本项目基于 [AndroidMic](https://github.com/teamclouday/AndroidMic) 开发
@@ -18,7 +48,7 @@ MicYou 是一款强大的工具，可以将您的 Android 设备变成 PC 的高
 - **音频处理**：内置噪声抑制、自动增益控制 (AGC) 和去混响功能
 - **跨平台支持**：
   - **Android 客户端**：现代 Material 3 界面，支持深色/浅色主题
-  - **桌面端服务端**：支持 Windows/Linux 接收音频
+  - **桌面端服务端**：支持 Windows/Linux/macOS 接收音频
 - **虚拟麦克风**：配合 VB-Cable 可作为系统麦克风输入使用
 - **高度可定制**：支持调整采样率、声道数和音频格式
 
@@ -167,6 +197,19 @@ MicYou
 ./gradlew :composeApp:packageRpm
 ```
 
+## Contributors
+<a href="https://github.com/LanRhyme/MicYou/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LanRhyme/MicYou" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
+
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lanrhyme/MicYou&type=Date)](https://star-history.com/#lanrhyme/MicYou&Date)
+<a href="https://www.star-history.com/#LanRhyme/MicYou&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=LanRhyme/MicYou&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=LanRhyme/MicYou&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=LanRhyme/MicYou&type=date&legend=top-left" />
+ </picture>
+</a>
