@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="./README_ZH.md">简体中文</a> | <a href="./README_TW.md">繁體中文</a> | <b>English</b>
+  <a href="./README_ZH_CN.md">简体中文</a> | <a href="./README_ZH_TW.md">繁體中文</a> | <b>English</b>
 </p>
 
 <p align="center">
@@ -58,10 +58,11 @@ Based on the [AndroidMic](https://github.com/teamclouday/AndroidMic) project.
 ### Android App
 |                        Main Screen                        |                           Settings                            |
 |:---------------------------------------------------------:|:-------------------------------------------------------------:|
-| <img src="img/android_screenshot_main.jpg" width="300" /> | <img src="img/android_screenshot_settings.jpg" width="300" /> |
+|<img width="300" src="./img/android_screenshot_main.png" />| <img width="300" src="./img/android_screenshot_settings.png" /> |
 
 ### Desktop App
-<img src="img/pc_screenshot.png" width="600" />
+<img width="600" src="./img/desktop_screenshot.png" />
+
 
 ## Getting Started
 

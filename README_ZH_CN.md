@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <b>简体中文</b> | <a href="./README_TW.md">繁體中文</a> | <a href="./README.md">English</a>
+  <b>简体中文</b> | <a href="./README_ZH_TW.md">繁體中文</a> | <a href="./README.md">English</a>
 </p>
 
 <p align="center">
@@ -57,10 +57,10 @@ MicYou 是一款强大的工具，可以将您的 Android 设备变成 PC 的高
 ### Android 客户端
 |                            主界面                            |                              设置                               |
 |:---------------------------------------------------------:|:-------------------------------------------------------------:|
-| <img src="img/android_screenshot_main.jpg" width="300" /> | <img src="img/android_screenshot_settings.jpg" width="300" /> |
+| <img src="./img/android_screenshot_main_zh_cn.png" width="300" /> | <img src="./img/android_screenshot_settings_zh_cn.png" width="300" /> |
 
 ### 桌面端
-<img src="img/pc_screenshot.png" width="600" />
+<img src="./img/desktop_screenshot_zh_cn.png" width="600" />
 
 ## 使用指南
 
