@@ -34,6 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lanrhyme.micyou.animation.EasingFunctions
 import kotlinx.coroutines.delay
+import micyou.composeapp.generated.resources.Res
+import micyou.composeapp.generated.resources.icon_bluetooth
+import micyou.composeapp.generated.resources.icon_home_wifi
+import micyou.composeapp.generated.resources.icon_pip
+import micyou.composeapp.generated.resources.icon_planet
+import micyou.composeapp.generated.resources.icon_settings
+import micyou.composeapp.generated.resources.icon_usb
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -175,7 +184,7 @@ private fun HeaderSection(
                     modifier = Modifier.size(36.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Icon(Icons.Rounded.Router, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                        Icon(painter = painterResource(Res.drawable.icon_pip), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                     }
                 }
                 Column {
@@ -193,7 +202,7 @@ private fun HeaderSection(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Icon(Icons.Rounded.Language, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp))
+                    Icon(painterResource(Res.drawable.icon_planet), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp))
                     SelectionContainer {
                         Text(platform.ipAddress, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Medium)
                     }
@@ -253,7 +262,7 @@ private fun ModeCard(
     strings: AppStrings
 ) {
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -261,9 +270,9 @@ private fun ModeCard(
             Text(strings.connectionModeLabel, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             
             val modes = listOfNotNull(
-                ConnectionMode.Wifi to (strings.modeWifi to Icons.Rounded.Wifi),
-                if (!isBluetoothDisabled) ConnectionMode.Bluetooth to (strings.modeBluetooth to Icons.Rounded.Bluetooth) else null,
-                ConnectionMode.Usb to (strings.modeUsb to Icons.Rounded.Usb)
+                ConnectionMode.Wifi to (strings.modeWifi to painterResource(Res.drawable.icon_home_wifi)),
+                if (!isBluetoothDisabled) ConnectionMode.Bluetooth to (strings.modeBluetooth to painterResource(Res.drawable.icon_bluetooth)) else null,
+                ConnectionMode.Usb to (strings.modeUsb to painterResource(Res.drawable.icon_usb))
             )
             
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -308,7 +317,7 @@ private fun PortCard(
     strings: AppStrings
 ) {
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -319,7 +328,7 @@ private fun PortCard(
                 onValueChange = onPortChange,
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(16.dp),
                 textStyle = MaterialTheme.typography.bodySmall
             )
         }
@@ -344,7 +353,7 @@ private fun StatusCard(
     )
     
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = modifier.fillMaxWidth()
     ) {
@@ -417,7 +426,7 @@ private fun CenterPanel(
     val isConnecting = state.streamState == StreamState.Connecting
 
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
         modifier = modifier.fillMaxHeight()
     ) {
@@ -626,7 +635,7 @@ private fun BottomBar(
     strings: AppStrings
 ) {
     Surface(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -642,7 +651,7 @@ private fun BottomBar(
             )
             
             IconButton(onClick = onOpenSettings, modifier = Modifier.size(32.dp)) {
-                Icon(Icons.Rounded.Settings, strings.settingsTitle, modifier = Modifier.size(18.dp))
+                Icon(painter = painterResource(Res.drawable.icon_settings), strings.settingsTitle, modifier = Modifier.size(18.dp))
             }
         }
     }

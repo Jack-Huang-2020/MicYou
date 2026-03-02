@@ -106,6 +106,10 @@ import com.lanrhyme.micyou.animation.rememberPulseAnimation
 import com.lanrhyme.micyou.animation.rememberRotationAnimation
 import com.lanrhyme.micyou.animation.rememberWaveAnimation
 import kotlinx.coroutines.delay
+import micyou.composeapp.generated.resources.Res
+import micyou.composeapp.generated.resources.icon_settings
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -944,7 +948,7 @@ private fun StatusControlPanel(
                         modifier = Modifier.size(40.dp),
                         content = {
                             Icon(
-                                Icons.Filled.Settings,
+                                painter = painterResource(Res.drawable.icon_settings),
                                 strings.settingsTitle,
                                 modifier = Modifier.size(20.dp)
                             )

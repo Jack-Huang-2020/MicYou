@@ -2,38 +2,86 @@ package com.lanrhyme.micyou
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import micyou.composeapp.generated.resources.Res
+import micyou.composeapp.generated.resources.icon_compass
+import micyou.composeapp.generated.resources.icon_creative
+import micyou.composeapp.generated.resources.icon_file
+import micyou.composeapp.generated.resources.icon_microphone
+import micyou.composeapp.generated.resources.icon_palette
+import micyou.composeapp.generated.resources.icon_planet
+import micyou.composeapp.generated.resources.icon_settings
+import micyou.composeapp.generated.resources.icon_star_fall
+import micyou.composeapp.generated.resources.icon_star_fall_mini
+import org.jetbrains.compose.resources.painterResource
 
-enum class SettingsSection(val label: String, val icon: ImageVector) {
-    General("常规", Icons.Default.Settings),
-    Appearance("外观", Icons.Default.Palette),
-    Audio("音频", Icons.Default.Mic),
-    About("关于", Icons.Default.Info)
+enum class SettingsSection {
+    General,
+    Appearance,
+    Audio,
+    About
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,10 +128,16 @@ fun DesktopLayout(viewModel: MainViewModel, onClose: () -> Unit) {
             Spacer(Modifier.weight(1f))
             
             SettingsSection.entries.forEach { section ->
+                val icon = when (section) {
+                    SettingsSection.General -> painterResource(Res.drawable.icon_settings)
+                    SettingsSection.Appearance -> painterResource(Res.drawable.icon_palette)
+                    SettingsSection.Audio -> painterResource(Res.drawable.icon_microphone)
+                    SettingsSection.About -> painterResource(Res.drawable.icon_compass)
+                }
                 NavigationRailItem(
                     selected = currentSection == section,
                     onClick = { currentSection = section },
-                    icon = { Icon(section.icon, contentDescription = section.getLabel(strings)) },
+                    icon = { Icon(painter = icon, contentDescription = section.getLabel(strings), modifier = Modifier.size(24.dp)) },
                     label = { Text(section.getLabel(strings)) }
                 )
             }
@@ -654,7 +708,7 @@ fun SettingsContent(section: SettingsSection, viewModel: MainViewModel) {
                     ListItem(
                         headlineContent = { Text(strings.developerLabel) },
                         supportingContent = { Text("LanRhyme、ChinsaaWei") },
-                        leadingContent = { Icon(Icons.Default.Person, null) }
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_star_fall_mini), null,modifier = Modifier.size(24.dp)) }
                     )
                     HorizontalDivider()
                     ListItem(
@@ -667,20 +721,20 @@ fun SettingsContent(section: SettingsSection, viewModel: MainViewModel) {
                                 modifier = Modifier.clickable { uriHandler.openUri("https://github.com/LanRhyme/MicYou") }
                             ) 
                         },
-                        leadingContent = { Icon(Icons.Default.Code, null) }
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_planet), null,modifier = Modifier.size(24.dp)) }
                     )
                     HorizontalDivider()
                     ListItem(
                         headlineContent = { Text(strings.contributorsLabel) },
                         supportingContent = { Text(strings.contributorsDesc) },
-                        leadingContent = { Icon(Icons.Default.Group, null) },
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_star_fall), null,modifier = Modifier.size(24.dp)) },
                         modifier = Modifier.clickable { uriHandler.openUri("https://github.com/LanRhyme/MicYou/graphs/contributors") }
                     )
                     HorizontalDivider()
                     ListItem(
                         headlineContent = { Text(strings.versionLabel) },
                         supportingContent = { Text(getAppVersion()) },
-                        leadingContent = { Icon(Icons.Default.Info, null) },
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_compass), null,modifier = Modifier.size(24.dp)) },
                         trailingContent = {
                             TextButton(onClick = { viewModel.checkUpdateManual() }) {
                                 Text(strings.checkUpdate)
@@ -691,14 +745,14 @@ fun SettingsContent(section: SettingsSection, viewModel: MainViewModel) {
                     ListItem(
                         headlineContent = { Text(strings.openSourceLicense) },
                         supportingContent = { Text(strings.viewLibraries) },
-                        leadingContent = { Icon(Icons.Default.Description, null) },
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_creative), null,modifier = Modifier.size(24.dp)) },
                         modifier = Modifier.clickable { showLicenseDialog = true }
                     )
                     HorizontalDivider()
                     ListItem(
                         headlineContent = { Text(strings.exportLog) },
                         supportingContent = { Text(strings.exportLogDesc) },
-                        leadingContent = { Icon(Icons.Default.BugReport, null) },
+                        leadingContent = { Icon(painterResource(Res.drawable.icon_file), null,modifier = Modifier.size(24.dp)) },
                         modifier = Modifier.clickable {
                             viewModel.exportLog { path ->
                                 if (path != null) {

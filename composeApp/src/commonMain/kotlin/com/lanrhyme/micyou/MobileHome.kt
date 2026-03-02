@@ -91,6 +91,9 @@ import com.lanrhyme.micyou.animation.rememberPulseAnimation
 import com.lanrhyme.micyou.animation.rememberRotationAnimation
 import com.lanrhyme.micyou.animation.rememberWaveAnimation
 import kotlinx.coroutines.delay
+import micyou.composeapp.generated.resources.Res
+import micyou.composeapp.generated.resources.icon_settings
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -169,7 +172,7 @@ fun MobileHome(viewModel: MainViewModel) {
                         interactionSource = settingsInteractionSource,
                         modifier = Modifier.scale(settingsScale)
                     ) {
-                        Icon(Icons.Filled.Settings, contentDescription = strings.settingsTitle)
+                        Icon(painterResource(Res.drawable.icon_settings), contentDescription = strings.settingsTitle)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
