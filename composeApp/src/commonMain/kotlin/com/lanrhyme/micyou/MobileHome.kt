@@ -136,6 +136,7 @@ fun MobileHome(viewModel: MainViewModel) {
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             CenterAlignedTopAppBar(
                 title = { 
@@ -176,52 +177,62 @@ fun MobileHome(viewModel: MainViewModel) {
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            AnimatedCardVisibility(
-                visible = contentVisible,
-                delayMillis = 100
-            ) {
-                ConnectionConfigCard(
-                    state = state,
-                    viewModel = viewModel,
-                    isClient = isClient,
-                    strings = strings
-                )
-            }
-
-            AnimatedCardVisibility(
-                visible = contentVisible,
-                delayMillis = 200
-            ) {
-                MuteCard(
-                    state = state,
-                    viewModel = viewModel,
-                    strings = strings
-                )
-            }
+        Box(modifier = Modifier.fillMaxSize()) {
+            CustomBackground(
+                settings = state.backgroundSettings,
+                modifier = Modifier.fillMaxSize()
+            )
             
-            AnimatedCardVisibility(
-                visible = contentVisible,
-                delayMillis = 300,
-                modifier = Modifier.weight(1f)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                MainControlCard(
-                    state = state,
-                    viewModel = viewModel,
-                    audioLevel = audioLevel,
-                    strings = strings
-                )
+                AnimatedCardVisibility(
+                    visible = contentVisible,
+                    delayMillis = 100
+                ) {
+                    ConnectionConfigCard(
+                        state = state,
+                        viewModel = viewModel,
+                        isClient = isClient,
+                        strings = strings,
+                        cardOpacity = state.backgroundSettings.cardOpacity
+                    )
+                }
+
+                AnimatedCardVisibility(
+                    visible = contentVisible,
+                    delayMillis = 200
+                ) {
+                    MuteCard(
+                        state = state,
+                        viewModel = viewModel,
+                        strings = strings,
+                        cardOpacity = state.backgroundSettings.cardOpacity
+                    )
+                }
+                
+                AnimatedCardVisibility(
+                    visible = contentVisible,
+                    delayMillis = 300,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    MainControlCard(
+                        state = state,
+                        viewModel = viewModel,
+                        audioLevel = audioLevel,
+                        strings = strings,
+                        cardOpacity = state.backgroundSettings.cardOpacity
+                    )
+                }
             }
         }
     }
@@ -273,11 +284,14 @@ private fun ConnectionConfigCard(
     state: AppUiState,
     viewModel: MainViewModel,
     isClient: Boolean,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity)
+        ),
         shape = RoundedCornerShape(24.dp)
     ) {
         Column(
@@ -397,7 +411,8 @@ private fun ConnectionConfigCard(
 private fun MuteCard(
     state: AppUiState,
     viewModel: MainViewModel,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -420,7 +435,7 @@ private fun MuteCard(
         modifier = Modifier
             .fillMaxWidth()
             .scale(cardScale),
-        colors = CardDefaults.cardColors(containerColor = cardColor),
+        colors = CardDefaults.cardColors(containerColor = cardColor.copy(alpha = cardOpacity)),
         shape = RoundedCornerShape(24.dp)
     ) {
         Row(
@@ -460,11 +475,14 @@ private fun MainControlCard(
     state: AppUiState,
     viewModel: MainViewModel,
     audioLevel: Float,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity)
+        ),
         shape = RoundedCornerShape(32.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

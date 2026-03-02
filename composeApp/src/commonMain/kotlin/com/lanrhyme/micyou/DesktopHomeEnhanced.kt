@@ -122,39 +122,50 @@ fun DesktopHomeEnhanced(
         shape = RoundedCornerShape(22.dp),
         modifier = Modifier.fillMaxSize().graphicsLayer { scaleX = scale; scaleY = scale; this.alpha = alpha }
     ) {
-        Column(modifier = Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            HeaderSection(
-                platform = platform,
-                state = state,
-                onMinimize = onMinimize,
-                onClose = onClose,
-                strings = strings
+        Box(modifier = Modifier.fillMaxSize()) {
+            CustomBackground(
+                settings = state.backgroundSettings,
+                modifier = Modifier.fillMaxSize()
             )
             
-            Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                LeftPanel(
+            Column(modifier = Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                HeaderSection(
+                    platform = platform,
                     state = state,
-                    viewModel = viewModel,
-                    isBluetoothDisabled = isBluetoothDisabled,
+                    onMinimize = onMinimize,
+                    onClose = onClose,
                     strings = strings,
-                    modifier = Modifier.weight(0.38f)
+                    cardOpacity = state.backgroundSettings.cardOpacity
                 )
                 
-                CenterPanel(
+                Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    LeftPanel(
+                        state = state,
+                        viewModel = viewModel,
+                        isBluetoothDisabled = isBluetoothDisabled,
+                        strings = strings,
+                        modifier = Modifier.weight(0.38f),
+                        cardOpacity = state.backgroundSettings.cardOpacity
+                    )
+                    
+                    CenterPanel(
+                        state = state,
+                        viewModel = viewModel,
+                        audioLevel = audioLevel,
+                        strings = strings,
+                        modifier = Modifier.weight(0.62f),
+                        cardOpacity = state.backgroundSettings.cardOpacity
+                    )
+                }
+                
+                BottomBar(
                     state = state,
                     viewModel = viewModel,
-                    audioLevel = audioLevel,
+                    onOpenSettings = onOpenSettings,
                     strings = strings,
-                    modifier = Modifier.weight(0.62f)
+                    cardOpacity = state.backgroundSettings.cardOpacity
                 )
             }
-            
-            BottomBar(
-                state = state,
-                viewModel = viewModel,
-                onOpenSettings = onOpenSettings,
-                strings = strings
-            )
         }
     }
 }
@@ -165,11 +176,12 @@ private fun HeaderSection(
     state: AppUiState,
     onMinimize: () -> Unit,
     onClose: () -> Unit,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -227,21 +239,24 @@ private fun LeftPanel(
     viewModel: MainViewModel,
     isBluetoothDisabled: Boolean,
     strings: AppStrings,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardOpacity: Float = 1f
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ModeCard(
             selectedMode = state.mode,
             onModeSelected = { viewModel.setMode(it) },
             isBluetoothDisabled = isBluetoothDisabled,
-            strings = strings
+            strings = strings,
+            cardOpacity = cardOpacity
         )
         
         if (state.mode != ConnectionMode.Bluetooth) {
             PortCard(
                 port = state.port,
                 onPortChange = { viewModel.setPort(it) },
-                strings = strings
+                strings = strings,
+                cardOpacity = cardOpacity
             )
         }
         
@@ -249,7 +264,8 @@ private fun LeftPanel(
             streamState = state.streamState,
             errorMessage = state.errorMessage,
             strings = strings,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            cardOpacity = cardOpacity
         )
     }
 }
@@ -259,11 +275,12 @@ private fun ModeCard(
     selectedMode: ConnectionMode,
     onModeSelected: (ConnectionMode) -> Unit,
     isBluetoothDisabled: Boolean,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -314,11 +331,12 @@ private fun ModeCard(
 private fun PortCard(
     port: String,
     onPortChange: (String) -> Unit,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -340,7 +358,8 @@ private fun StatusCard(
     streamState: StreamState,
     errorMessage: String?,
     strings: AppStrings,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardOpacity: Float = 1f
 ) {
     val statusColor by animateColorAsState(
         targetValue = when (streamState) {
@@ -354,7 +373,7 @@ private fun StatusCard(
     
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         modifier = modifier.fillMaxWidth()
     ) {
         Column(
@@ -420,14 +439,15 @@ private fun CenterPanel(
     viewModel: MainViewModel,
     audioLevel: Float,
     strings: AppStrings,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardOpacity: Float = 1f
 ) {
     val isRunning = state.streamState == StreamState.Streaming
     val isConnecting = state.streamState == StreamState.Connecting
 
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f),
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f * cardOpacity),
         modifier = modifier.fillMaxHeight()
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -632,11 +652,12 @@ private fun BottomBar(
     state: AppUiState,
     viewModel: MainViewModel,
     onOpenSettings: () -> Unit,
-    strings: AppStrings
+    strings: AppStrings,
+    cardOpacity: Float = 1f
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(

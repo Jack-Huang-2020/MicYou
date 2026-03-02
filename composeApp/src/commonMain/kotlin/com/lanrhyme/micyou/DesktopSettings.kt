@@ -38,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
@@ -433,6 +434,68 @@ fun SettingsContent(section: SettingsSection, viewModel: MainViewModel) {
                              enabled = isSeedColorEnabled,
                              modifier = Modifier.fillMaxWidth()
                          )
+                         
+                         HorizontalDivider()
+                         
+                         Text(strings.backgroundSettingsLabel, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                         
+                         Row(
+                             modifier = Modifier.fillMaxWidth(),
+                             horizontalArrangement = Arrangement.spacedBy(8.dp)
+                         ) {
+                             Button(
+                                 onClick = { viewModel.pickBackgroundImage() },
+                                 modifier = Modifier.weight(1f)
+                             ) {
+                                 Text(strings.selectBackgroundImage)
+                             }
+                             if (state.backgroundSettings.hasCustomBackground) {
+                                 OutlinedButton(
+                                     onClick = { viewModel.clearBackgroundImage() },
+                                     modifier = Modifier.weight(1f)
+                                 ) {
+                                     Text(strings.clearBackgroundImage)
+                                 }
+                             }
+                         }
+                         
+                         if (state.backgroundSettings.hasCustomBackground) {
+                             Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                 Text(
+                                     "${strings.backgroundBrightnessLabel}: ${(state.backgroundSettings.brightness * 100).toInt()}%",
+                                     style = MaterialTheme.typography.bodySmall
+                                 )
+                                 Slider(
+                                     value = state.backgroundSettings.brightness,
+                                     onValueChange = { viewModel.setBackgroundBrightness(it) },
+                                     valueRange = 0f..1f
+                                 )
+                             }
+                             
+                             Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                 Text(
+                                     "${strings.backgroundBlurLabel}: ${state.backgroundSettings.blurRadius.toInt()}px",
+                                     style = MaterialTheme.typography.bodySmall
+                                 )
+                                 Slider(
+                                     value = state.backgroundSettings.blurRadius,
+                                     onValueChange = { viewModel.setBackgroundBlur(it) },
+                                     valueRange = 0f..50f
+                                 )
+                             }
+                             
+                             Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                                 Text(
+                                     "${strings.cardOpacityLabel}: ${(state.backgroundSettings.cardOpacity * 100).toInt()}%",
+                                     style = MaterialTheme.typography.bodySmall
+                                 )
+                                 Slider(
+                                     value = state.backgroundSettings.cardOpacity,
+                                     onValueChange = { viewModel.setCardOpacity(it) },
+                                     valueRange = 0f..1f
+                                 )
+                             }
+                         }
                      }
                 }
             }

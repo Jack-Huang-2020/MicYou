@@ -28,11 +28,11 @@ enum class NoiseReductionType(val label: String) {
 data class AppUiState(
     val mode: ConnectionMode = ConnectionMode.Wifi,
     val streamState: StreamState = StreamState.Idle,
-    val ipAddress: String = "192.168.1.5", // 默认 IP
+    val ipAddress: String = "192.168.1.5",
     val port: String = "6000",
     val errorMessage: String? = null,
     val themeMode: ThemeMode = ThemeMode.System,
-    val seedColor: Long = 0xFF4285F4, // Google Blue - 默认主题色
+    val seedColor: Long = 0xFF4285F4,
     val monitoringEnabled: Boolean = false,
     val sampleRate: SampleRate = SampleRate.Rate44100,
     val channelCount: ChannelCount = ChannelCount.Mono,
@@ -41,7 +41,7 @@ data class AppUiState(
     
     // Audio Processing Settings
     val enableNS: Boolean = false,
-    val nsType: NoiseReductionType = NoiseReductionType.RNNoise, // 默认使用 RNNoise
+    val nsType: NoiseReductionType = NoiseReductionType.RNNoise,
     
     val enableAGC: Boolean = false,
     val agcTargetLevel: Int = 32000,
@@ -73,7 +73,10 @@ data class AppUiState(
     val showCloseConfirmDialog: Boolean = false,
     val rememberCloseAction: Boolean = false,
     val newVersionAvailable: GitHubRelease? = null,
-    val pocketMode: Boolean = true
+    val pocketMode: Boolean = true,
+    
+    // Background Settings
+    val backgroundSettings: BackgroundSettings = BackgroundSettings()
 )
 
 enum class CloseAction(val label: String) {
@@ -150,6 +153,11 @@ class MainViewModel : ViewModel() {
             CloseAction.Prompt
         }
         val savedPocketMode = settings.getBoolean("pocket_mode", true)
+        
+        val savedBackgroundImagePath = settings.getString("background_image_path", "")
+        val savedBackgroundBrightness = settings.getFloat("background_brightness", 0.5f)
+        val savedBackgroundBlur = settings.getFloat("background_blur", 0f)
+        val savedCardOpacity = settings.getFloat("card_opacity", 1f)
 
         _uiState.update { 
             it.copy(
@@ -179,7 +187,13 @@ class MainViewModel : ViewModel() {
                 isAutoConfig = savedIsAutoConfig,
                 minimizeToTray = savedMinimizeToTray,
                 closeAction = savedCloseAction,
-                pocketMode = savedPocketMode
+                pocketMode = savedPocketMode,
+                backgroundSettings = BackgroundSettings(
+                    imagePath = savedBackgroundImagePath,
+                    brightness = savedBackgroundBrightness,
+                    blurRadius = savedBackgroundBlur,
+                    cardOpacity = savedCardOpacity
+                )
             ) 
         }
         
@@ -601,5 +615,39 @@ class MainViewModel : ViewModel() {
     fun exportLog(onResult: (String?) -> Unit) {
         val path = Logger.getLogFilePath()
         onResult(path)
+    }
+    
+    fun setBackgroundImage(path: String?) {
+        val newSettings = _uiState.value.backgroundSettings.copy(imagePath = path ?: "")
+        _uiState.update { it.copy(backgroundSettings = newSettings) }
+        settings.putString("background_image_path", path ?: "")
+    }
+    
+    fun setBackgroundBrightness(brightness: Float) {
+        val newSettings = _uiState.value.backgroundSettings.copy(brightness = brightness)
+        _uiState.update { it.copy(backgroundSettings = newSettings) }
+        settings.putFloat("background_brightness", brightness)
+    }
+    
+    fun setBackgroundBlur(blurRadius: Float) {
+        val newSettings = _uiState.value.backgroundSettings.copy(blurRadius = blurRadius)
+        _uiState.update { it.copy(backgroundSettings = newSettings) }
+        settings.putFloat("background_blur", blurRadius)
+    }
+    
+    fun setCardOpacity(opacity: Float) {
+        val newSettings = _uiState.value.backgroundSettings.copy(cardOpacity = opacity)
+        _uiState.update { it.copy(backgroundSettings = newSettings) }
+        settings.putFloat("card_opacity", opacity)
+    }
+    
+    fun clearBackgroundImage() {
+        setBackgroundImage("")
+    }
+    
+    fun pickBackgroundImage() {
+        BackgroundImagePicker.pickImage { path ->
+            path?.let { setBackgroundImage(it) }
+        }
     }
 }

@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
         ContextHelper.init(this)
         Logger.init(AndroidLogger(this))
         Logger.i("MainActivity", "App started")
+        
+        BackgroundImagePicker.registerLauncher(this)
 
         val permissionsToRequest = mutableListOf<String>()
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {

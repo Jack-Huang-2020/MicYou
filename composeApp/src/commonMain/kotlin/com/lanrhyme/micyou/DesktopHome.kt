@@ -218,52 +218,62 @@ fun DesktopHome(
                 this.alpha = alpha
             }
     ) {
-        Row(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            AnimatedCard(
-                visible = cardVisible,
-                delayMillis = 100,
-                modifier = Modifier.weight(1f).fillMaxHeight()
+        Box(modifier = Modifier.fillMaxSize()) {
+            CustomBackground(
+                settings = state.backgroundSettings,
+                modifier = Modifier.fillMaxSize()
+            )
+            
+            Row(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                NetworkConfigCard(
-                    state = state,
-                    viewModel = viewModel,
-                    platform = platform,
-                    strings = strings,
-                    isBluetoothDisabled = isBluetoothDisabled
-                )
-            }
+                AnimatedCard(
+                    visible = cardVisible,
+                    delayMillis = 100,
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    cardOpacity = state.backgroundSettings.cardOpacity
+                ) {
+                    NetworkConfigCard(
+                        state = state,
+                        viewModel = viewModel,
+                        platform = platform,
+                        strings = strings,
+                        isBluetoothDisabled = isBluetoothDisabled
+                    )
+                }
 
-            AnimatedCard(
-                visible = cardVisible,
-                delayMillis = 200,
-                modifier = Modifier.weight(0.8f).fillMaxHeight(),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                shape = RoundedCornerShape(22.dp)
-            ) {
-                ControlCenter(
-                    state = state,
-                    viewModel = viewModel,
-                    audioLevel = audioLevel,
-                    strings = strings
-                )
-            }
+                AnimatedCard(
+                    visible = cardVisible,
+                    delayMillis = 200,
+                    modifier = Modifier.weight(0.8f).fillMaxHeight(),
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = RoundedCornerShape(22.dp),
+                    cardOpacity = state.backgroundSettings.cardOpacity
+                ) {
+                    ControlCenter(
+                        state = state,
+                        viewModel = viewModel,
+                        audioLevel = audioLevel,
+                        strings = strings
+                    )
+                }
 
-            AnimatedCard(
-                visible = cardVisible,
-                delayMillis = 300,
-                modifier = Modifier.weight(1f).fillMaxHeight()
-            ) {
-                StatusControlPanel(
-                    state = state,
-                    viewModel = viewModel,
-                    onMinimize = onMinimize,
-                    onClose = onClose,
-                    onOpenSettings = onOpenSettings,
-                    strings = strings
-                )
+                AnimatedCard(
+                    visible = cardVisible,
+                    delayMillis = 300,
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    cardOpacity = state.backgroundSettings.cardOpacity
+                ) {
+                    StatusControlPanel(
+                        state = state,
+                        viewModel = viewModel,
+                        onMinimize = onMinimize,
+                        onClose = onClose,
+                        onOpenSettings = onOpenSettings,
+                        strings = strings
+                    )
+                }
             }
         }
     }
@@ -276,6 +286,7 @@ private fun AnimatedCard(
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     shape: RoundedCornerShape = RoundedCornerShape(22.dp),
+    cardOpacity: Float = 1f,
     content: @Composable () -> Unit
 ) {
     val cardAlpha by animateFloatAsState(
@@ -303,7 +314,9 @@ private fun AnimatedCard(
                 this.scaleY = cardScale
                 translationY = cardOffsetY
             },
-        colors = CardDefaults.cardColors(containerColor = containerColor),
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor.copy(alpha = cardOpacity)
+        ),
         shape = shape
     ) {
         content()

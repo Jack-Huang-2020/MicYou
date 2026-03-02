@@ -166,7 +166,15 @@ data class AppStrings(
     val installLinuxExists: String = "Virtual audio device exists, configuring...",
     val installCreatingDevice: String = "Creating virtual audio device...",
     val installDeviceCreated: String = "Virtual device created, configuring...",
-    val installDeviceFailed: String = "Virtual device creation failed, check system permissions and audio service"
+    val installDeviceFailed: String = "Virtual device creation failed, check system permissions and audio service",
+    
+    // Background Settings
+    val backgroundSettingsLabel: String = "Background",
+    val selectBackgroundImage: String = "Select Image",
+    val clearBackgroundImage: String = "Clear",
+    val backgroundBrightnessLabel: String = "Brightness",
+    val backgroundBlurLabel: String = "Blur",
+    val cardOpacityLabel: String = "Card Opacity"
 )
 
 val LocalAppStrings = staticCompositionLocalOf { AppStrings() }
