@@ -1,5 +1,6 @@
 package com.lanrhyme.micyou
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,8 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHost
@@ -58,7 +57,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -124,24 +126,68 @@ fun DesktopLayout(viewModel: MainViewModel, onClose: () -> Unit) {
     val strings = LocalAppStrings.current
     
     Row(modifier = Modifier.fillMaxSize()) {
-        NavigationRail {
-            Spacer(Modifier.weight(1f))
-            
-            SettingsSection.entries.forEach { section ->
-                val icon = when (section) {
-                    SettingsSection.General -> painterResource(Res.drawable.icon_settings)
-                    SettingsSection.Appearance -> painterResource(Res.drawable.icon_palette)
-                    SettingsSection.Audio -> painterResource(Res.drawable.icon_microphone)
-                    SettingsSection.About -> painterResource(Res.drawable.icon_compass)
+        Surface(
+            modifier = Modifier.width(220.dp).fillMaxSize(),
+            color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.1f)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                item {
+                    Text(
+                        strings.settingsTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                    )
                 }
-                NavigationRailItem(
-                    selected = currentSection == section,
-                    onClick = { currentSection = section },
-                    icon = { Icon(painter = icon, contentDescription = section.getLabel(strings), modifier = Modifier.size(24.dp)) },
-                    label = { Text(section.getLabel(strings)) }
-                )
+                
+                item { HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp)) }
+                
+                items(SettingsSection.entries.toList()) { section ->
+                    val icon = when (section) {
+                        SettingsSection.General -> painterResource(Res.drawable.icon_settings)
+                        SettingsSection.Appearance -> painterResource(Res.drawable.icon_palette)
+                        SettingsSection.Audio -> painterResource(Res.drawable.icon_microphone)
+                        SettingsSection.About -> painterResource(Res.drawable.icon_compass)
+                    }
+                    val isSelected = currentSection == section
+                    
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 3.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable { currentSection = section }
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+                                else Color.Transparent
+                            )
+                            .animateContentSize()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = icon,
+                            contentDescription = section.getLabel(strings),
+                            modifier = Modifier.size(22.dp),
+                            tint = if (isSelected) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            section.getLabel(strings),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+                            color = if (isSelected) MaterialTheme.colorScheme.onSecondaryContainer
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
-            Spacer(Modifier.weight(1f))
         }
         
         VerticalDivider()
