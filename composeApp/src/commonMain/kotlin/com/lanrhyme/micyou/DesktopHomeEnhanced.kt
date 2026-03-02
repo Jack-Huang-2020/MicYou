@@ -95,6 +95,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.lanrhyme.micyou.animation.EasingFunctions
 import dev.chrisbanes.haze.HazeState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import micyou.composeapp.generated.resources.Res
 import micyou.composeapp.generated.resources.icon_bluetooth
@@ -126,21 +127,29 @@ fun DesktopHomeEnhanced(
     val strings = LocalAppStrings.current
     
     var visible by remember { mutableStateOf(false) }
+    var cardVisible by remember { mutableStateOf(false) }
     
     val hazeState = if (state.backgroundSettings.enableHazeEffect && state.backgroundSettings.hasCustomBackground) {
         rememberHazeState()
     } else null
     
     val scale by animateFloatAsState(
-        targetValue = if (visible) 1f else 0.9f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+        targetValue = if (visible) 1f else 0.85f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
     )
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
-        animationSpec = tween(350, easing = EasingFunctions.EaseOutExpo)
+        animationSpec = tween(400, easing = EasingFunctions.EaseOutExpo)
     )
     
-    LaunchedEffect(Unit) { visible = true }
+    LaunchedEffect(Unit) {
+        visible = true
+        delay(100)
+        cardVisible = true
+    }
 
     LaunchedEffect(isBluetoothDisabled, state.mode) {
         if (isBluetoothDisabled && state.mode == ConnectionMode.Bluetooth) {
@@ -205,7 +214,9 @@ fun DesktopHomeEnhanced(
                     onClose = onClose,
                     strings = strings,
                     cardOpacity = state.backgroundSettings.cardOpacity,
-                    hazeState = hazeState
+                    hazeState = hazeState,
+                    visible = cardVisible,
+                    delayMillis = 100
                 )
                 
                 Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -216,7 +227,9 @@ fun DesktopHomeEnhanced(
                         strings = strings,
                         modifier = Modifier.weight(0.38f),
                         cardOpacity = state.backgroundSettings.cardOpacity,
-                        hazeState = hazeState
+                        hazeState = hazeState,
+                        visible = cardVisible,
+                        delayMillis = 200
                     )
                     
                     CenterPanel(
@@ -226,7 +239,9 @@ fun DesktopHomeEnhanced(
                         strings = strings,
                         modifier = Modifier.weight(0.62f),
                         cardOpacity = state.backgroundSettings.cardOpacity,
-                        hazeState = hazeState
+                        hazeState = hazeState,
+                        visible = cardVisible,
+                        delayMillis = 300
                     )
                 }
                 
@@ -236,7 +251,9 @@ fun DesktopHomeEnhanced(
                     onOpenSettings = onOpenSettings,
                     strings = strings,
                     cardOpacity = state.backgroundSettings.cardOpacity,
-                    hazeState = hazeState
+                    hazeState = hazeState,
+                    visible = cardVisible,
+                    delayMillis = 400
                 )
             }
         }
@@ -251,13 +268,39 @@ private fun HeaderSection(
     onClose: () -> Unit,
     strings: AppStrings,
     cardOpacity: Float = 1f,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    visible: Boolean = false,
+    delayMillis: Int = 0
 ) {
+    val cardAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(400, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+    val cardScale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.9f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+            visibilityThreshold = 0.001f
+        )
+    )
+    val cardOffsetY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+        animationSpec = tween(500, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+
     HazeSurface(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         hazeColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity * 0.7f),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                this.alpha = cardAlpha
+                this.scaleX = cardScale
+                this.scaleY = cardScale
+                translationY = cardOffsetY
+            },
         hazeState = hazeState,
         enabled = state.backgroundSettings.enableHazeEffect
     ) {
@@ -414,9 +457,36 @@ private fun LeftPanel(
     strings: AppStrings,
     modifier: Modifier = Modifier,
     cardOpacity: Float = 1f,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    visible: Boolean = false,
+    delayMillis: Int = 0
 ) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    val panelAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(400, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+    val panelScale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.9f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+            visibilityThreshold = 0.001f
+        )
+    )
+    val panelOffsetY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+        animationSpec = tween(500, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+
+    Column(
+        modifier = modifier.graphicsLayer {
+            this.alpha = panelAlpha
+            this.scaleX = panelScale
+            this.scaleY = panelScale
+            translationY = panelOffsetY
+        },
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         ModeCard(
             selectedMode = state.mode,
             onModeSelected = { viewModel.setMode(it) },
@@ -628,6 +698,7 @@ private fun StatusCard(
     }
 }
 
+@Suppress("UnusedBoxWithConstraintsScope")
 @Composable
 private fun CenterPanel(
     state: AppUiState,
@@ -636,8 +707,27 @@ private fun CenterPanel(
     strings: AppStrings,
     modifier: Modifier = Modifier,
     cardOpacity: Float = 1f,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    visible: Boolean = false,
+    delayMillis: Int = 0
 ) {
+    val panelAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(400, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+    val panelScale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.9f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+            visibilityThreshold = 0.001f
+        )
+    )
+    val panelOffsetY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+        animationSpec = tween(500, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+
     val isRunning = state.streamState == StreamState.Streaming
     val isConnecting = state.streamState == StreamState.Connecting
 
@@ -645,7 +735,14 @@ private fun CenterPanel(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f * cardOpacity),
         hazeColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.25f * cardOpacity * 0.7f),
-        modifier = modifier.fillMaxHeight(),
+        modifier = modifier
+            .fillMaxHeight()
+            .graphicsLayer {
+                this.alpha = panelAlpha
+                this.scaleX = panelScale
+                this.scaleY = panelScale
+                translationY = panelOffsetY
+            },
         hazeState = hazeState,
         enabled = state.backgroundSettings.enableHazeEffect
     ) {
@@ -1164,13 +1261,39 @@ private fun BottomBar(
     onOpenSettings: () -> Unit,
     strings: AppStrings,
     cardOpacity: Float = 1f,
-    hazeState: HazeState? = null
+    hazeState: HazeState? = null,
+    visible: Boolean = false,
+    delayMillis: Int = 0
 ) {
+    val barAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(400, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+    val barScale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.9f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+            visibilityThreshold = 0.001f
+        )
+    )
+    val barOffsetY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+        animationSpec = tween(500, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+
     HazeSurface(
         shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity),
         hazeColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = cardOpacity * 0.7f),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                this.alpha = barAlpha
+                this.scaleX = barScale
+                this.scaleY = barScale
+                translationY = barOffsetY
+            },
         hazeState = hazeState,
         enabled = state.backgroundSettings.enableHazeEffect
     ) {

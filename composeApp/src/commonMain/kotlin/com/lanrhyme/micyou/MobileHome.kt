@@ -256,34 +256,30 @@ private fun AnimatedCardVisibility(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    var localVisible by remember { mutableStateOf(false) }
-    
-    LaunchedEffect(visible) {
-        if (visible) {
-            delay(delayMillis.toLong())
-            localVisible = true
+    val cardAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(400, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+    val cardScale by animateFloatAsState(
+        targetValue = if (visible) 1f else 0.9f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow,
+            visibilityThreshold = 0.001f
+        )
+    )
+    val cardOffsetY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+        animationSpec = tween(500, delayMillis, easing = EasingFunctions.EaseOutExpo)
+    )
+
+    Box(
+        modifier = modifier.graphicsLayer {
+            this.alpha = cardAlpha
+            this.scaleX = cardScale
+            this.scaleY = cardScale
+            translationY = cardOffsetY
         }
-    }
-    
-    AnimatedVisibility(
-        visible = localVisible,
-        enter = fadeIn(
-            animationSpec = tween(400, easing = EasingFunctions.EaseOutExpo)
-        ) + slideInVertically(
-            initialOffsetY = { 30 },
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        ) + scaleIn(
-            initialScale = 0.9f,
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        ),
-        exit = fadeOut(tween(200)) + slideOutVertically { 20 } + scaleOut(targetScale = 0.95f),
-        modifier = modifier
     ) {
         content()
     }
