@@ -81,6 +81,7 @@ fun main() {
         val viewModel = remember { MainViewModel() }
         var isSettingsOpen by remember { mutableStateOf(false) }
         var isVisible by remember { mutableStateOf(true) }
+        var bringSettingsToFront by remember { mutableStateOf(false) }
 
         val language by viewModel.uiState.collectAsState().let { state ->
             derivedStateOf { state.value.language }
@@ -189,7 +190,13 @@ fun main() {
                             exitProcess(0)
                         },
                         onHideApp = { isVisible = false },
-                        onOpenSettings = { isSettingsOpen = true },
+                        onOpenSettings = { 
+                            if (isSettingsOpen) {
+                                bringSettingsToFront = true
+                            } else {
+                                isSettingsOpen = true
+                            }
+                        },
                         isBluetoothDisabled = isBluetoothDisabled
                     )
                 }
@@ -202,6 +209,16 @@ fun main() {
                 height = 650.dp,
                 position = WindowPosition(Alignment.Center)
             )
+            
+            LaunchedEffect(bringSettingsToFront) {
+                if (bringSettingsToFront) {
+                    java.awt.Window.getWindows()
+                        .filterIsInstance<java.awt.Frame>()
+                        .find { it.title == strings.settingsTitle }
+                        ?.toFront()
+                    bringSettingsToFront = false
+                }
+            }
             
             Window(
                 onCloseRequest = { isSettingsOpen = false },
